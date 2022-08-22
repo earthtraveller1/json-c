@@ -24,6 +24,7 @@ int main()
         printf("\t%s\n", tokens[i]);
     }
     
+    free_tokenized_string(tokens, token_amount);
     free((void*)file_contents);
     
     return 0;
