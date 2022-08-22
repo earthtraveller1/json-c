@@ -55,7 +55,7 @@ void free_tokenized_string(const char** p_tokens, uint32_t p_token_count)
 {
     for (uint32_t i = 0; i < p_token_count; i++)
     {
-        free((char*)p_tokens[i]);
+        free((void*)p_tokens[i]);
     }
     
     free(p_tokens);
