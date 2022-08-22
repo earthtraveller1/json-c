@@ -3,5 +3,8 @@
         "build": [
             "src/*"
         ]
+    },
+    "files.associations": {
+        "stdlib.h": "c"
     }
 }
