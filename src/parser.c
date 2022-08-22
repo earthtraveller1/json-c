@@ -11,7 +11,7 @@ const char **tokenize_string(const char *string, uint32_t *token_count)
     // Get the number of tokens in the string.
     for (uint32_t i = 0; i < strlen(string); i++)
     {
-        if (i > 0 && !IS_WHITESPACE(string, i) && IS_WHITESPACE(string, i - 1))
+        if ((i > 0 && !IS_WHITESPACE(string, i) && IS_WHITESPACE(string, i - 1)) || ((i == 0) && !IS_WHITESPACE(string, i)))
         {
             *token_count += 1;
         }
