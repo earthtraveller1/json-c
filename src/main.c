@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "file-utils.h"
+#include "parser.h"
 
 int main()
 {
@@ -13,8 +14,15 @@ int main()
     }
     
     printf("File Content:\n%s\n", file_contents);
+    printf("Tokens:\n");
     
-    file_contents = "Hello, yes!\n";
+    uint32_t token_amount;
+    const char** tokens = tokenize_string(file_contents, &token_amount);
+    
+    for (uint32_t i = 0; i < token_amount; i++)
+    {
+        printf("\t%s\n", tokens[i]);
+    }
     
     free((void*)file_contents);
     
