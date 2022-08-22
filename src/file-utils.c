@@ -30,5 +30,7 @@ const char* read_file_as_string(const char* p_filename)
     fseek(file, 0, SEEK_SET);
     fgets(buffer, buffer_length, file);
     
+    fclose(file);
+    
     return buffer;
 }
