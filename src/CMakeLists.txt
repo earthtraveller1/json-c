@@ -1,8 +1,10 @@
 target_sources(
-    tmake PRIVATE
+    "tmake" PRIVATE
     
-    file-utils.c
-    main.c
+    "file-utils.c"
+    "main.c"
+    "parser.c"
     
-    file-utils.h
+    "file-utils.h"
+    "parser.h"
 )
