@@ -1,18 +1,22 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "file-utils.h"
 
 int main()
 {
-    FILE* test_file = fopen("sandbox/test.txt", "r");
-    if (test_file == NULL)
+    char const* file_contents = read_file_as_string("sandbox/test.txt");
+    if (!file_contents)
     {
-        fprintf(stderr, "[FATAL ERROR]: Failed to open sandbox/test.txt\n");
+        fprintf(stderr, "[FATAL ERROR]: Failed to find or load sandbox/test.txt\n");
+        return EXIT_FAILURE;
     }
     
-    const uint32_t file_size = get_file_size(test_file);
+    printf("File Content:\n%s\n", file_contents);
     
-    printf("File size: %d\n", file_size);
+    file_contents = "Hello, yes!\n";
+    
+    free((void*)file_contents);
     
     return 0;
 }
