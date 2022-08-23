@@ -29,7 +29,13 @@ const char* read_file_as_string(const char* p_filename)
     char* buffer = malloc((buffer_length) * sizeof(char));
     
     fseek(file, 0, SEEK_SET);
-    fgets(buffer, buffer_length, file);
+    
+    for (uint32_t i = 0; i < (buffer_length - 1); i++)
+    {
+        buffer[i] = fgetc(file);
+    }
+    
+    buffer[buffer_length] = 0;
     
     fclose(file);
     
