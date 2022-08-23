@@ -1,0 +1,20 @@
+{
+    "name": "Sandbox",
+    "version": "1.0.0",
+    "targets": [
+        {
+            "name": "sandbox",
+            "type": "executable",
+            "sourceDirectories": [
+                "src"
+            ]
+        },
+        {
+            "name": "math-funcs",
+            "type": "staticLibrary",
+            "sourceDirectories": [
+                "src/math-funcs"
+            ]
+        }
+    ]
+}
