@@ -48,7 +48,7 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         character_index += token_size;
     }
 
-    return tokens;
+    return (const char**)tokens;
 }
 
 void free_tokenized_string(const char** p_tokens, uint32_t p_token_count)
