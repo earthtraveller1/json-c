@@ -14,6 +14,8 @@ endif()
 
 if (MSVC)
     add_compile_options("/W4")
+else()
+    add_compile_options("-Wall" "-Wpedantics")
 endif()
 
 add_executable("tmake")
