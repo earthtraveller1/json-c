@@ -21,6 +21,7 @@ const char* read_file_as_string(const char* p_filename)
     FILE* file = fopen(p_filename, "r");
     if (!file)
     {
+        fprintf(stderr, "[ERROR]: Failed to open %s", p_filename);
         return NULL;
     }
     
