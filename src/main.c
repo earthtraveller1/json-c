@@ -4,27 +4,31 @@
 #include "file-utils.h"
 #include "parser.h"
 
-int main()
+const char** tokenize_file(const char* p_filename, uint32_t* token_count)
 {
-    char const* file_contents = read_file_as_string("sandbox/test.txt");
-    if (!file_contents)
+    const char* file_contents = read_file_as_string(p_filename);
+    if (file_contents == NULL)
     {
-        return EXIT_FAILURE;
+        return NULL;
     }
     
-    printf("File Content:\n%s\n", file_contents);
-    printf("Tokens:\n");
+    const char** tokens = tokenize_string(file_contents, token_count);
     
-    uint32_t token_amount;
-    const char** tokens = tokenize_string(file_contents, &token_amount);
+    free((void*)file_contents);
+    return tokens;
+}
+
+int main()
+{
+    uint32_t token_count;
+    const char** tokens = tokenize_file("sandbox/tony.json", &token_count);
     
-    for (uint32_t i = 0; i < token_amount; i++)
+    for (uint32_t i = 0; i < token_count; i++)
     {
         printf("\t%s\n", tokens[i]);
     }
     
-    free_tokenized_string(tokens, token_amount);
-    free((void*)file_contents);
+    free_tokenized_string(tokens, token_count);
     
     return 0;
 }
