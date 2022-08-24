@@ -16,7 +16,6 @@ const char** tokenize_file(const char* p_filename, uint32_t* token_count)
     
     const char** tokens = tokenize_string(file_contents, token_count);
     
-    free((void*)file_contents);
     return tokens;
 }
 
