@@ -30,9 +30,17 @@ const char* read_file_as_string(const char* p_filename)
     
     fseek(file, 0, SEEK_SET);
     
-    for (uint32_t i = 0; i < (buffer_length - 1); i++)
+    for (uint32_t i = 0; i < buffer_length; i++)
     {
-        buffer[i] = fgetc(file);
+        char character = fgetc(file);
+        if (character == EOF)
+        {
+            buffer[i] = 0;
+        }
+        else
+        {
+            buffer[i] = character;
+        }
     }
     
     buffer[buffer_length] = 0;
