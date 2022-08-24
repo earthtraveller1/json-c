@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdio.h>
 
 #define IS_WHITESPACE(string, i) (string[i] == ' ' || string[i] == '\t' || string[i] == '\n')
 
@@ -12,7 +13,11 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
     // Get the number of tokens in the string.
     for (uint32_t i = 0; i < strlen(p_string); i++)
     {
-        if (((i > 0 && !IS_WHITESPACE(p_string, i) && IS_WHITESPACE(p_string, i - 1)) || ((i == 0) && !IS_WHITESPACE(p_string, i))) || (!isalnum(p_string[i]) && !IS_WHITESPACE(p_string, i)))
+        if (
+            ((i > 0) && !IS_WHITESPACE(p_string, i) && IS_WHITESPACE(p_string, i - 1)) ||
+            ((i > 0) && isalnum(p_string[i]) && !isalnum(p_string[i - 1])) ||
+            ((i == 0) && !IS_WHITESPACE(p_string, i)) ||
+            (!isalnum(p_string[i]) && !IS_WHITESPACE(p_string, i)))
         {
             *p_token_count += 1;
         }
