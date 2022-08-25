@@ -91,7 +91,7 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
                 is_in_string = 1;
             }
         }
-        else
+        else if (!is_in_string)
         {
             (*p_symbol_count)++;
         }
@@ -128,7 +128,7 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
 
                 // We must add two to include the beginning and ending quotati-
                 // on marks.
-                tokens_in_symbol += 1;
+                tokens_in_symbol += 2;
             }
 
             // Obtain the length of the symbol in bytes
