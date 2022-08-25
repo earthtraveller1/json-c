@@ -31,7 +31,7 @@ int main()
         printf("\t%s\n", tokens[i]);
     }
 
-    free_tokenized_string(tokens, token_count);
+    free_string_array(tokens, token_count);
 
     return 0;
 }
