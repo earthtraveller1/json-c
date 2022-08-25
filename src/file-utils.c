@@ -43,7 +43,7 @@ const char* read_file_as_string(const char* p_filename)
         }
     }
     
-    buffer[buffer_length] = 0;
+    buffer[buffer_length - 1] = 0;
     
     fclose(file);
     
