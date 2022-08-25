@@ -30,8 +30,18 @@ int main()
     {
         printf("\t%s\n", tokens[i]);
     }
-
+    
+    uint32_t symbol_count;
+    const char** symbols = chunk_tokens_to_symbols(tokens, token_count, &symbol_count);
     free_string_array(tokens, token_count);
+    
+    printf("\nSymbols:\n");
+    for (uint32_t i = 0; i < symbol_count; i++)
+    {
+        printf("\t%s\n", symbols[i]);
+    }
+    
+    free_string_array(symbols, symbol_count);
 
     return 0;
 }
