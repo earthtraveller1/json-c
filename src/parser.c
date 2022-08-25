@@ -1,10 +1,11 @@
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#define IS_WHITESPACE(string, i) (string[i] == ' ' || string[i] == '\t' || string[i] == '\n')
+#define IS_WHITESPACE(string, i)                                               \
+    (string[i] == ' ' || string[i] == '\t' || string[i] == '\n')
 
 const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
 {
@@ -13,8 +14,8 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
     // Get the number of tokens in the string.
     for (uint32_t i = 0; i < strlen(p_string); i++)
     {
-        if (
-            ((i > 0) && !IS_WHITESPACE(p_string, i) && IS_WHITESPACE(p_string, i - 1)) ||
+        if (((i > 0) && !IS_WHITESPACE(p_string, i) &&
+             IS_WHITESPACE(p_string, i - 1)) ||
             ((i > 0) && isalnum(p_string[i]) && !isalnum(p_string[i - 1])) ||
             ((i == 0) && !IS_WHITESPACE(p_string, i)) ||
             (!isalnum(p_string[i]) && !IS_WHITESPACE(p_string, i)))
@@ -37,7 +38,8 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
                 character_index++;
             }
 
-            if (!isalnum(p_string[character_index]) && !IS_WHITESPACE(p_string, character_index))
+            if (!isalnum(p_string[character_index]) &&
+                !IS_WHITESPACE(p_string, character_index))
             {
                 token_size = 1;
             }
@@ -45,10 +47,9 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
             {
                 uint32_t counter_character_index = character_index;
 
-                while (
-                    !IS_WHITESPACE(p_string, counter_character_index) &&
-                    p_string[counter_character_index] != 0 &&
-                    isalnum(p_string[counter_character_index]))
+                while (!IS_WHITESPACE(p_string, counter_character_index) &&
+                       p_string[counter_character_index] != 0 &&
+                       isalnum(p_string[counter_character_index]))
                 {
                     token_size++;
                     counter_character_index++;
