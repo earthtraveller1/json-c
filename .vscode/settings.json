@@ -7,5 +7,6 @@
     "files.associations": {
         "stdlib.h": "c",
         "file-utils.h": "c"
-    }
+    },
+    "C_Cpp.formatting": "clangFormat"
 }
