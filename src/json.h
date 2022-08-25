@@ -12,8 +12,6 @@ possible. Most of them should be self explanatory.
 
 enum json_field_type
 {
-    JSON_FIELD_TYPE_INT = 0,
-    JSON_FIELD_TYPE_FLOAT = 1,
     JSON_FIELD_TYPE_STRING = 2,
     JSON_FIELD_TYPE_OBJECT = 3,
     JSON_FIELD_TYPE_ARRAY = 4
