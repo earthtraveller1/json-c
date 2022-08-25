@@ -2,8 +2,9 @@
 #define D000424B_64A5_449A_BB64_37EE58E7F6F5
 
 #include <stddef.h>
+#include <stdint.h>
 
-enum json_field_type_e
+enum json_field_type
 {
     JSON_FIELD_TYPE_INT = 0,
     JSON_FIELD_TYPE_FLOAT = 1,
@@ -12,29 +13,31 @@ enum json_field_type_e
     JSON_FIELD_TYPE_ARRAY = 4
 };
 
-struct json_field_t
+struct json_field
 {
     const char *name;
-    json_field_type_e type;
+    enum json_field_type type;
     void *value;
 };
 
-struct json_object_t
+struct json_object
 {
     size_t number_of_fields;
-    json_field_t *fields;
+    struct json_field *fields;
 };
 
-struct json_array_element_t
+struct json_array_element
 {
-    json_field_type_e type;
+    enum json_field_type type;
     void *value;
 };
 
-struct json_array_t
+struct json_array
 {
     size_t number_of_elements;
-    json_array_element_t *elements;
+    struct json_array_element *elements;
 };
+
+struct json_object json_parse_object(const char** tokens, uint32_t token_count);
 
 #endif /* D000424B_64A5_449A_BB64_37EE58E7F6F5 */
