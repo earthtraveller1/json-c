@@ -5,6 +5,7 @@ target_sources(
     "main.c"
     "parser.c"
     
+    "json.h"
     "file-utils.h"
     "parser.h"
 )
