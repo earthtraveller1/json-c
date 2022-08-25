@@ -2,6 +2,7 @@ target_sources(
     "tmake" PRIVATE
     
     "file-utils.c"
+    "json.c"
     "main.c"
     "parser.c"
     
