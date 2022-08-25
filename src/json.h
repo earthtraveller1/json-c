@@ -1,6 +1,8 @@
 #ifndef D000424B_64A5_449A_BB64_37EE58E7F6F5
 #define D000424B_64A5_449A_BB64_37EE58E7F6F5
 
+#include <stddef.h>
+
 enum json_field_type_e
 {
     JSON_FIELD_TYPE_INT = 0,
