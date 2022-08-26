@@ -153,7 +153,7 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
         }
         else
         {
-            uint32_t symbol_length = strlen(p_tokens[token_index]);
+            uint32_t symbol_length = strlen(p_tokens[token_index]) + 1;
             symbol = malloc(symbol_length * sizeof(char));
             strcpy(symbol, p_tokens[token_index]);
             token_index++;
