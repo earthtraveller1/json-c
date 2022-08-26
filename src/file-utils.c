@@ -18,8 +18,8 @@ uint32_t get_file_size(FILE *p_file)
 
 const char *read_file_as_string(const char *p_filename)
 {
-    FILE *file = fopen(p_filename, "r");
-    if (!file)
+    FILE *file;
+    if (fopen_s(&file, p_filename, "r") != 0)
     {
         fprintf(stderr, "[ERROR]: Failed to open %s", p_filename);
         return NULL;
@@ -32,7 +32,7 @@ const char *read_file_as_string(const char *p_filename)
 
     for (uint32_t i = 0; i < buffer_length; i++)
     {
-        char character = fgetc(file);
+        char character = (char)fgetc(file);
         if (character == EOF)
         {
             buffer[i] = 0;

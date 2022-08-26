@@ -24,7 +24,12 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         }
     }
 
-    char **tokens = malloc((*p_token_count) * sizeof(char *));
+    char **tokens;
+    if (*p_token_count == 0) { return NULL; }
+    else
+    {
+       tokens = malloc((*p_token_count) * sizeof(char *));
+    }
 
     uint32_t character_index = 0;
     for (uint32_t i = 0; i < *p_token_count; i++)
@@ -60,7 +65,8 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         char *token = malloc(token_size + 1);
         token[token_size] = 0;
 
-        memcpy(token, p_string + character_index, token_size);
+        //memcpy(token, p_string + character_index, token_size);
+        memcpy_s(token, token_size, p_string + character_index, token_size);
         tokens[i] = token;
         character_index += token_size;
     }
@@ -98,7 +104,15 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
     }
 
     // Next, we allocate the buffer to hold all the symbols.
-    char **symbols = malloc((*p_symbol_count) * sizeof(char *));
+    char **symbols;
+    if (*p_symbol_count > 0)
+    {
+        symbols = malloc((*p_symbol_count) * sizeof(char *));
+    }
+    else 
+    {
+        return NULL;
+    }
 
     uint32_t token_index = 0;
 
@@ -106,7 +120,7 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
     for (uint32_t i = 0; i < *p_symbol_count; i++)
     {
         char *symbol = NULL;
-        
+
         // Prevent segmentation faults
         if (token_index >= p_token_count)
         {
@@ -120,7 +134,8 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
                 // We start counting from the token that's not a quotation
                 uint32_t counter_token_index = token_index + 1;
 
-                while ((counter_token_index < p_token_count) && (strcmp(p_tokens[counter_token_index], "\"") != 0))
+                while ((counter_token_index < p_token_count) &&
+                       (strcmp(p_tokens[counter_token_index], "\"") != 0))
                 {
                     counter_token_index += 1;
                     tokens_in_symbol += 1;
@@ -133,29 +148,29 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
 
             // Obtain the length of the symbol in bytes
             uint32_t symbol_length = 0;
-            for (uint32_t i = 0; i < tokens_in_symbol; i++)
+            for (uint32_t j = 0; j < tokens_in_symbol; j++)
             {
-                symbol_length += strlen(p_tokens[token_index + i]);
+                symbol_length += (uint32_t)strlen(p_tokens[token_index + j]);
             }
 
             // Add one for the null terminator
             symbol_length += 1;
 
             symbol = malloc(symbol_length * sizeof(char));
-            strcpy(symbol, p_tokens[token_index]);
+            strcpy_s(symbol, symbol_length, p_tokens[token_index]);
 
-            for (uint32_t i = 1; i < tokens_in_symbol; i++)
+            for (uint32_t j = 1; j < tokens_in_symbol; j++)
             {
-                strcat(symbol, p_tokens[token_index + i]);
+                strcat_s(symbol, symbol_length, p_tokens[token_index + j]);
             }
-            
+
             token_index += tokens_in_symbol;
         }
         else
         {
-            uint32_t symbol_length = strlen(p_tokens[token_index]) + 1;
+            uint32_t symbol_length = (uint32_t)strlen(p_tokens[token_index]) + 1;
             symbol = malloc(symbol_length * sizeof(char));
-            strcpy(symbol, p_tokens[token_index]);
+            strcpy_s(symbol, symbol_length, p_tokens[token_index]);
             token_index++;
         }
 
