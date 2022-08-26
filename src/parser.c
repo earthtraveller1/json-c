@@ -165,12 +165,12 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
     return (const char **)symbols;
 }
 
-void free_string_array(const char **p_tokens, uint32_t p_token_count)
+void free_string_array(const char **p_strings, uint32_t p_string_count)
 {
-    for (uint32_t i = 0; i < p_token_count; i++)
+    for (uint32_t i = 0; i < p_string_count; i++)
     {
-        free((void *)p_tokens[i]);
+        free((void *)p_strings[i]);
     }
 
-    free(p_tokens);
+    free(p_strings);
 }
