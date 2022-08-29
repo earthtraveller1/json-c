@@ -1,7 +1,9 @@
 {
     "triggerTaskOnSave.tasks": {
         "build": [
-            "src/*"
+            "**/*.c",
+            "**/*.h",
+            "**/CMakeLists.txt"
         ]
     },
     "files.associations": {
