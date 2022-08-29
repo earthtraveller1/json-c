@@ -21,3 +21,5 @@ endif()
 add_library("json-c")
 
 add_subdirectory("src")
+
+add_subdirectory("sandbox")
