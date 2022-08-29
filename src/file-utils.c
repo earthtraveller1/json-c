@@ -18,8 +18,8 @@ uint32_t get_file_size(FILE *p_file)
 
 const char *read_file_as_string(const char *p_filename)
 {
-    FILE *file;
-    if (fopen_s(&file, p_filename, "r") != 0)
+    FILE *file = fopen(p_filename, "r");
+    if (file == NULL)
     {
         fprintf(stderr, "[ERROR]: Failed to open %s", p_filename);
         return NULL;
