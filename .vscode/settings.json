@@ -8,7 +8,8 @@
     },
     "files.associations": {
         "stdlib.h": "c",
-        "file-utils.h": "c"
+        "file-utils.h": "c",
+        "parser.h": "c"
     },
     "C_Cpp.formatting": "clangFormat"
 }
