@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project("TMake")
+project("JSON C")
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
@@ -18,6 +18,6 @@ else()
     add_compile_options("-Wall" "-Wpedantic")
 endif()
 
-add_executable("tmake")
+add_library("json-c")
 
 add_subdirectory("src")
