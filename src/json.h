@@ -12,13 +12,18 @@ possible. Most of them should be self explanatory.
 
 enum json_field_type
 {
-    JSON_FIELD_TYPE_STRING = 2,
-    JSON_FIELD_TYPE_OBJECT = 3,
-    JSON_FIELD_TYPE_ARRAY = 4
+    JSON_FIELD_TYPE_BOOLEAN = 0,
+    JSON_FIELD_TYPE_INTEGER = 1,
+    JSON_FIELD_TYPE_FLOAT = 2,
+    JSON_FIELD_TYPE_STRING = 3,
+    JSON_FIELD_TYPE_OBJECT = 4,
+    JSON_FIELD_TYPE_ARRAY = 5
 };
 
 union json_field_value
 {
+    int32_t int_value;
+    double float_value;
     const char *string_value;
     struct json_object *object_value;
     struct json_array *array_value;
