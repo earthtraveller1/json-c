@@ -17,11 +17,18 @@ enum json_field_type
     JSON_FIELD_TYPE_ARRAY = 4
 };
 
+union json_field_value
+{
+    const char *string_value;
+    struct json_object *object_value;
+    struct json_array *array_value;
+};
+
 struct json_field
 {
     const char *name;
     enum json_field_type type;
-    void *value;
+    union json_field_value value;
 };
 
 struct json_object
@@ -33,7 +40,7 @@ struct json_object
 struct json_array_element
 {
     enum json_field_type type;
-    void *value;
+    union json_field_value value;
 };
 
 struct json_array
