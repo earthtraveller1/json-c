@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 #include "json.h"
 
 static uint32_t get_object_field_count(const char **p_symbols,
