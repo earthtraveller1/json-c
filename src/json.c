@@ -4,6 +4,50 @@
 
 #include "json.h"
 
+static uint32_t get_block_size_in_symbols(const char** p_symbols, size_t p_starting_symbol, size_t p_symbol_count)
+{
+    const char opening_char = p_symbols[p_starting_symbol][0];
+    char closing_char;
+    if (opening_char == '{')
+    {
+        closing_char = '}';
+    }
+    else if (opening_char == '[')
+    {
+        closing_char = ']';
+    }
+    else
+    {
+        fprintf(stderr, "[ERROR]: Unknown block-opening character '%c'\n", opening_char);
+    }
+    
+    uint32_t required_closing_chars_to_close = 1;
+    
+    uint32_t result = 0;
+    
+    for (uint32_t i = p_starting_symbol + 1; i < p_symbol_count; i++)
+    {
+        if (p_symbols[i][0] == opening_char)
+        {
+            required_closing_chars_to_close += 1;
+        }
+        
+        if (p_symbols[i][0] == closing_char)
+        {
+            required_closing_chars_to_close -= 1;
+        }
+        
+        if (required_closing_chars_to_close == 0)
+        {
+            break;
+        }
+        
+        result += 1;
+    }
+    
+    return result;
+}
+
 static uint32_t get_object_field_count(const char **p_symbols,
                                        uint32_t p_symbol_count)
 {
