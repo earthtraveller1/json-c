@@ -61,8 +61,8 @@ struct json_object json_parse_object(const char **p_symbols,
 
     if (strcmp(p_symbols[0], "{") != 0)
     {
-        fprintf(stderr, "[ERROR]: Object does not seem to start with '{'");
-        return result;
+        fprintf(stderr, "[ERROR]: Object does not seem to start with '{'\n");
+        return result; // TODO: Better error handling mechanism
     }
 
     for (uint32_t i = 0; i < result.number_of_fields; i++)
@@ -81,9 +81,81 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             symbol_index += 1;
         }
-    }
 
-    // TODO: Finish writing this function
+        // Extract the name of the field
+        const size_t name_size = strlen(p_symbols[symbol_index]) - 2;
+        char *field_name = malloc((name_size + 1) * sizeof(char));
+        strncpy(field_name, p_symbols[symbol_index] + 1, name_size);
+
+        symbol_index += 1;
+        if (p_symbols[symbol_index][0] != ':')
+        {
+            fprintf(stderr, "[ERROR]: Expected ':' after field name of '%s'\n",
+                    field_name);
+            return result; // TODO: Better error handling mechanism
+        }
+
+        symbol_index += 1;
+
+        union json_field_value field_value;
+        enum json_field_type field_type;
+        if (p_symbols[symbol_index][0] == '\"' &&
+            p_symbols[symbol_index][strlen(p_symbols[symbol_index]) - 1] ==
+                '\"')
+        {
+            field_type = JSON_FIELD_TYPE_STRING;
+            const size_t field_size = strlen(p_symbols[symbol_index]) - 2;
+            char *field_string_value = malloc((field_size + 1) * sizeof(char));
+            strncpy(field_string_value, p_symbols[symbol_index] + 1,
+                    field_size);
+
+            field_value.string_value = field_string_value;
+        }
+        else if (strcmp(p_symbols[symbol_index], "true") == 0)
+        {
+            field_type = JSON_FIELD_TYPE_BOOLEAN;
+            field_value.boolean_value = 1;
+        }
+        else if (strcmp(p_symbols[symbol_index], "false") == 0)
+        {
+            field_type = JSON_FIELD_TYPE_BOOLEAN;
+            field_value.boolean_value = 0;
+        }
+        else if (p_symbols[symbol_index][0] == '{')
+        {
+            field_type = JSON_FIELD_TYPE_OBJECT;
+            field_value.object_value = NULL; // TODO: Parse child objects
+            // Note: objects will not work correctly yet.
+        }
+        else if (p_symbols[symbol_index][0] == '[')
+        {
+            field_type = JSON_FIELD_TYPE_ARRAY;
+            field_value.array_value = NULL; // TODO: Parse arrays
+            // Note: arrays will not work correctly yet.
+        }
+        else
+        {
+            fprintf(stderr, "[ERROR]: Expected value at field '%s'\n",
+                    field_name);
+            return result; // TODO: Better error handling mechanism
+        }
+
+        symbol_index += 1;
+
+        if (p_symbols[symbol_index][0] != ',')
+        {
+            fprintf(stderr, "[ERROR]: Expected ',' after field '%s'\n",
+                    field_name);
+            return result; // TODO: Better error handling mechanism
+        }
+
+        struct json_field field;
+        field.name = field_name;
+        field.type = field_type;
+        field.value = field_value;
+
+        result.fields[i] = field;
+    }
 
     return result;
 }
