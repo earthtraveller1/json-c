@@ -23,10 +23,15 @@ static uint32_t get_block_size_in_symbols(const char** p_symbols, size_t p_start
     
     uint32_t required_closing_chars_to_close = 1;
     
-    uint32_t result = 0;
+    uint32_t result = 1;
     
     for (uint32_t i = p_starting_symbol + 1; i < p_symbol_count; i++)
     {
+        if (required_closing_chars_to_close == 0)
+        {
+            break;
+        }
+        
         if (p_symbols[i][0] == opening_char)
         {
             required_closing_chars_to_close += 1;
@@ -35,11 +40,6 @@ static uint32_t get_block_size_in_symbols(const char** p_symbols, size_t p_start
         if (p_symbols[i][0] == closing_char)
         {
             required_closing_chars_to_close -= 1;
-        }
-        
-        if (required_closing_chars_to_close == 0)
-        {
-            break;
         }
         
         result += 1;
