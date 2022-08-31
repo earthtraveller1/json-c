@@ -22,6 +22,7 @@ enum json_field_type
 
 union json_field_value
 {
+    uint8_t boolean_value;
     int32_t int_value;
     double float_value;
     const char *string_value;
