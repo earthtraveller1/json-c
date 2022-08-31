@@ -10,7 +10,7 @@ const char **tokenize_string(const char *string, uint32_t *token_count);
 
 // Chunk a list of tokens into symbols
 const char **chunk_tokens_to_symbols(const char **tokens, uint32_t token_count,
-                                    uint32_t *symbol_count);
+                                     uint32_t *symbol_count);
 
 // Free an array of strings.
 void free_string_array(const char **strings, uint32_t string_count);

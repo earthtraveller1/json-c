@@ -25,10 +25,13 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
     }
 
     char **tokens;
-    if (*p_token_count == 0) { return NULL; }
+    if (*p_token_count == 0)
+    {
+        return NULL;
+    }
     else
     {
-       tokens = malloc((*p_token_count) * sizeof(char *));
+        tokens = malloc((*p_token_count) * sizeof(char *));
     }
 
     uint32_t character_index = 0;
@@ -66,7 +69,7 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         token[token_size] = 0;
 
         memcpy(token, p_string + character_index, token_size);
-        //memcpy_s(token, token_size, p_string + character_index, token_size);
+        // memcpy_s(token, token_size, p_string + character_index, token_size);
         tokens[i] = token;
         character_index += token_size;
     }
@@ -109,7 +112,7 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
     {
         symbols = malloc((*p_symbol_count) * sizeof(char *));
     }
-    else 
+    else
     {
         return NULL;
     }
@@ -162,14 +165,15 @@ const char **chunk_tokens_to_symbols(const char **p_tokens,
             for (uint32_t j = 1; j < tokens_in_symbol; j++)
             {
                 strcat(symbol, p_tokens[token_index + j]);
-                //strcat_s(symbol, symbol_length, p_tokens[token_index + j]);
+                // strcat_s(symbol, symbol_length, p_tokens[token_index + j]);
             }
 
             token_index += tokens_in_symbol;
         }
         else
         {
-            uint32_t symbol_length = (uint32_t)strlen(p_tokens[token_index]) + 1;
+            uint32_t symbol_length =
+                (uint32_t)strlen(p_tokens[token_index]) + 1;
             symbol = malloc(symbol_length * sizeof(char));
             strcpy(symbol, p_tokens[token_index]);
             token_index++;
