@@ -169,13 +169,15 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             field_type = JSON_FIELD_TYPE_OBJECT;
             field_value.object_value = NULL; // TODO: Parse child objects
-            // Note: objects will not work correctly yet.
+            
+            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index, p_symbol_count);
         }
         else if (p_symbols[symbol_index][0] == '[')
         {
             field_type = JSON_FIELD_TYPE_ARRAY;
             field_value.array_value = NULL; // TODO: Parse arrays
-            // Note: arrays will not work correctly yet.
+            
+            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index, p_symbol_count);
         }
         else
         {
