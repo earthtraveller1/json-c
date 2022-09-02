@@ -16,7 +16,7 @@ if (MSVC)
     add_compile_options("/W4")
     add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 else()
-    add_compile_options("-Wall" "-Wpedantic")
+    add_compile_options("-Wall" "-Werror" "-Wpedantic")
 endif()
 
 add_library("json-c")
