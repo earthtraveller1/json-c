@@ -16,10 +16,16 @@ int main()
     const char **symbols =
         chunk_tokens_to_symbols(tokens, token_count, &symbol_count);
     free_string_array(tokens, token_count);
+    
+    printf("[INFO]: Symbols:\n");
+    for (uint32_t i = 0; i < symbol_count; i++)
+    {
+        printf("\t%s\n", symbols[i]);
+    }
 
     struct json_object json_object = json_parse_object(symbols, symbol_count);
 
-    printf("Number of fields: %zd", json_object.number_of_fields);
+    printf("[INFO]: Number of fields: %zd\n", json_object.number_of_fields);
 
     return 0;
 }
