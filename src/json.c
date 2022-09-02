@@ -160,6 +160,9 @@ struct json_object json_parse_object(const char **p_tokens,
             char *field_string_value = malloc((field_size + 1) * sizeof(char));
             strncpy(field_string_value, p_tokens[symbol_index] + 1,
                     field_size);
+                    
+            // Ensure null termination
+            field_string_value[field_size] = 0;
 
             field_value.string_value = field_string_value;
         }
