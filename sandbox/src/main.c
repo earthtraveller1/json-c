@@ -32,6 +32,20 @@ int main()
     }
 
     printf("[INFO]: Number of fields: %zd\n", json_object.number_of_fields);
+    
+    printf("[INFO]: Field names and values:\n");
+    for (uint32_t i = 0; i < json_object.number_of_fields; i++)
+    {
+        printf("\t%s = ", json_object.fields[i].name);
+        if (json_object.fields[i].type == JSON_FIELD_TYPE_STRING)
+        {
+            printf("%s\n", json_object.fields[i].value.string_value);
+        }
+        else 
+        {
+            printf("<NOT STRING>\n"); // Sorry, too lazy
+        }
+    }
 
     return 0;
 }
