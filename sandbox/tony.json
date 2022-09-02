@@ -1,6 +1,6 @@
 {
     "someone": "John Doe",
-    "hello": "This is a bozo",
+    "hello": "This is a test",
     "person": {
         "intelligence": "5",
         "starting": "false",
