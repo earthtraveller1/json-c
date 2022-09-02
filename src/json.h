@@ -55,6 +55,6 @@ struct json_array
     struct json_array_element *elements;
 };
 
-struct json_object json_parse_object(const char **tokens, uint32_t token_count);
+struct json_object json_parse_object(const char **tokens, uint32_t token_count, uint8_t* status);
 
 #endif /* D000424B_64A5_449A_BB64_37EE58E7F6F5 */

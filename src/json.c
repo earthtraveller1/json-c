@@ -94,7 +94,7 @@ static uint32_t get_object_field_count(const char **p_symbols,
 }
 
 struct json_object json_parse_object(const char **p_symbols,
-                                     uint32_t p_symbol_count)
+                                     uint32_t p_symbol_count, uint8_t *p_status)
 {
     struct json_object result;
     result.number_of_fields = get_object_field_count(
@@ -109,7 +109,8 @@ struct json_object json_parse_object(const char **p_symbols,
     if (strcmp(p_symbols[0], "{") != 0)
     {
         fprintf(stderr, "[ERROR]: Object does not seem to start with '{'\n");
-        return result; // TODO: Better error handling mechanism
+        *p_status = 0;
+        return result;
     }
 
     for (uint32_t i = 0; i < result.number_of_fields; i++)
@@ -142,7 +143,8 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             fprintf(stderr, "[ERROR]: Expected ':' after field name of '%s'\n",
                     field_name);
-            return result; // TODO: Better error handling mechanism
+            *p_status = 0;
+            return result;
         }
 
         symbol_index += 1;
@@ -191,7 +193,8 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             fprintf(stderr, "[ERROR]: Expected value at field '%s'\n",
                     field_name);
-            return result; // TODO: Better error handling mechanism
+            *p_status = 0;
+            return result;
         }
 
         symbol_index += 1;
@@ -201,7 +204,8 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             fprintf(stderr, "[ERROR]: Expected ',' after field '%s'\n",
                     field_name);
-            return result; // TODO: Better error handling mechanism
+            *p_status = 0;
+            return result;
         }
 
         struct json_field field;
@@ -211,6 +215,7 @@ struct json_object json_parse_object(const char **p_symbols,
 
         result.fields[i] = field;
     }
-
+    
+    *p_status = 1;
     return result;
 }
