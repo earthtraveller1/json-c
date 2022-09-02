@@ -11,20 +11,9 @@ int main()
     uint32_t token_count;
     const char **tokens = tokenize_string(file_contents, &token_count);
     free((void *)file_contents);
-
-    uint32_t symbol_count;
-    const char **symbols =
-        chunk_tokens_to_symbols(tokens, token_count, &symbol_count);
-    free_string_array(tokens, token_count);
-    
-    printf("[INFO]: Symbols:\n");
-    for (uint32_t i = 0; i < symbol_count; i++)
-    {
-        printf("\t%s\n", symbols[i]);
-    }
     
     uint8_t status;
-    struct json_object json_object = json_parse_object(symbols, symbol_count, &status);
+    struct json_object json_object = json_parse_object(tokens, token_count, &status);
     if (!status)
     {
         fprintf(stderr, "[ERROR]: Failed to parse JSON 'sandbox/tony.json'\n");
