@@ -4,7 +4,9 @@
 
 #include "json.h"
 
-static uint32_t get_block_size_in_symbols(const char** p_symbols, size_t p_starting_symbol, size_t p_symbol_count)
+static uint32_t get_block_size_in_symbols(const char **p_symbols,
+                                          size_t p_starting_symbol,
+                                          size_t p_symbol_count)
 {
     const char opening_char = p_symbols[p_starting_symbol][0];
     char closing_char;
@@ -18,33 +20,34 @@ static uint32_t get_block_size_in_symbols(const char** p_symbols, size_t p_start
     }
     else
     {
-        fprintf(stderr, "[ERROR]: Unknown block-opening character '%c'\n", opening_char);
+        fprintf(stderr, "[ERROR]: Unknown block-opening character '%c'\n",
+                opening_char);
     }
-    
+
     uint32_t required_closing_chars_to_close = 1;
-    
+
     uint32_t result = 1;
-    
+
     for (uint32_t i = p_starting_symbol + 1; i < p_symbol_count; i++)
     {
-        if (required_closing_chars_to_close == 0)
-        {
-            break;
-        }
-        
         if (p_symbols[i][0] == opening_char)
         {
             required_closing_chars_to_close += 1;
         }
-        
+
         if (p_symbols[i][0] == closing_char)
         {
             required_closing_chars_to_close -= 1;
         }
-        
+
+        if (required_closing_chars_to_close == 0)
+        {
+            break;
+        }
+
         result += 1;
     }
-    
+
     return result;
 }
 
@@ -131,6 +134,9 @@ struct json_object json_parse_object(const char **p_symbols,
         char *field_name = malloc((name_size + 1) * sizeof(char));
         strncpy(field_name, p_symbols[symbol_index] + 1, name_size);
 
+        // Ensures that it will be null terminated
+        field_name[name_size] = 0;
+
         symbol_index += 1;
         if (p_symbols[symbol_index][0] != ':')
         {
@@ -169,15 +175,17 @@ struct json_object json_parse_object(const char **p_symbols,
         {
             field_type = JSON_FIELD_TYPE_OBJECT;
             field_value.object_value = NULL; // TODO: Parse child objects
-            
-            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index, p_symbol_count);
+
+            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index,
+                                                      p_symbol_count);
         }
         else if (p_symbols[symbol_index][0] == '[')
         {
             field_type = JSON_FIELD_TYPE_ARRAY;
             field_value.array_value = NULL; // TODO: Parse arrays
-            
-            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index, p_symbol_count);
+
+            symbol_index += get_block_size_in_symbols(p_symbols, symbol_index,
+                                                      p_symbol_count);
         }
         else
         {
@@ -188,7 +196,8 @@ struct json_object json_parse_object(const char **p_symbols,
 
         symbol_index += 1;
 
-        if (p_symbols[symbol_index][0] != ',')
+        if (p_symbols[symbol_index][0] != ',' &&
+            p_symbols[symbol_index][0] != '}')
         {
             fprintf(stderr, "[ERROR]: Expected ',' after field '%s'\n",
                     field_name);
