@@ -22,8 +22,14 @@ int main()
     {
         printf("\t%s\n", symbols[i]);
     }
-
-    struct json_object json_object = json_parse_object(symbols, symbol_count);
+    
+    uint8_t status;
+    struct json_object json_object = json_parse_object(symbols, symbol_count, &status);
+    if (!status)
+    {
+        fprintf(stderr, "[ERROR]: Failed to parse JSON 'sandbox/tony.json'\n");
+        return -1;
+    }
 
     printf("[INFO]: Number of fields: %zd\n", json_object.number_of_fields);
 
