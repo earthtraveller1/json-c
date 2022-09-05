@@ -20,14 +20,26 @@ enum json_field_type
     JSON_FIELD_TYPE_ARRAY = 5
 };
 
+struct json_object
+{
+    size_t number_of_fields;
+    struct json_field *fields;
+};
+
+struct json_array
+{
+    size_t number_of_elements;
+    struct json_array_element *elements;
+};
+
 union json_field_value
 {
     uint8_t boolean_value;
     int32_t int_value;
     double float_value;
     const char *string_value;
-    struct json_object *object_value;
-    struct json_array *array_value;
+    struct json_object object_value;
+    struct json_array array_value;
 };
 
 struct json_field
@@ -37,22 +49,10 @@ struct json_field
     union json_field_value value;
 };
 
-struct json_object
-{
-    size_t number_of_fields;
-    struct json_field *fields;
-};
-
 struct json_array_element
 {
     enum json_field_type type;
     union json_field_value value;
-};
-
-struct json_array
-{
-    size_t number_of_elements;
-    struct json_array_element *elements;
 };
 
 struct json_object json_parse_object(const char **tokens, uint32_t token_count, uint8_t* status);
