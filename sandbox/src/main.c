@@ -37,9 +37,26 @@ int main()
         {
             printf("%s\n", json_object.fields[i].value.string_value);
         }
+        else if (json_object.fields[i].type == JSON_FIELD_TYPE_OBJECT)
+        {
+            printf("\n");
+            for (uint32_t j = 0; j < json_object.fields[i].value.object_value.number_of_fields; j++)
+            {
+                printf("\t\t%s = ", json_object.fields[i].value.object_value.fields[j].name);
+                
+                if (json_object.fields[i].value.object_value.fields[j].type == JSON_FIELD_TYPE_STRING)
+                {
+                    printf("%s\n", json_object.fields[i].value.object_value.fields[j].value.string_value);
+                }
+                else 
+                {
+                    printf("<VALUE HERE>\n");
+                }
+            }
+        }
         else 
         {
-            printf("<NOT STRING>\n"); // Sorry, too lazy
+            printf("<VALUE HERE>\n"); // Sorry, too lazy
         }
     }
 
