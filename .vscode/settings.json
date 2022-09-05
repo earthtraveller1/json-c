@@ -20,5 +20,8 @@
         "performance-*",
         "portability-*",
         "readability-*"
+    ],
+    "clang-tidy.compilerArgs": [
+        "-D_CRT_SECURE_NO_WARNINGS"
     ]
 }
