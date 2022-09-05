@@ -29,7 +29,7 @@ static uint32_t get_block_size_in_symbols(const char **p_symbols,
 
     uint32_t result = 1;
 
-    for (uint32_t i = p_starting_symbol + 1; i < p_symbol_count; i++)
+    for (uint32_t i = (uint32_t)p_starting_symbol + 1; i < p_symbol_count; i++)
     {
         if (p_symbols[i][0] == opening_char)
         {
@@ -180,16 +180,22 @@ struct json_object json_parse_object(const char **p_tokens,
         }
         else if (p_tokens[symbol_index][0] == '{')
         {
+            const uint32_t block_size = get_block_size_in_symbols(p_tokens, symbol_index, p_token_count);
+            uint8_t status = 0;
+            
             field_type = JSON_FIELD_TYPE_OBJECT;
-            field_value.object_value = NULL; // TODO: Parse child objects
+            field_value.object_value = json_parse_object(p_tokens + symbol_index, block_size, &status);
+            
+            if (!status)
+            {
+                fprintf(stderr, "[ERROR]: Too many errors processing child object '%s'.", field_name);
+            }
 
-            symbol_index += get_block_size_in_symbols(p_tokens, symbol_index,
-                                                      p_token_count);
+            symbol_index += block_size;
         }
         else if (p_tokens[symbol_index][0] == '[')
         {
-            field_type = JSON_FIELD_TYPE_ARRAY;
-            field_value.array_value = NULL; // TODO: Parse arrays
+            field_type = JSON_FIELD_TYPE_ARRAY; // TODO: Parse arrays
 
             symbol_index += get_block_size_in_symbols(p_tokens, symbol_index,
                                                       p_token_count);
