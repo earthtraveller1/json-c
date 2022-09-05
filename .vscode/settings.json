@@ -11,5 +11,14 @@
         "file-utils.h": "c",
         "parser.h": "c"
     },
-    "C_Cpp.formatting": "clangFormat"
+    "C_Cpp.formatting": "clangFormat",
+    "clang-tidy.checks": [
+        "bugprone-*",
+        "clang-analyzer-*",
+        "misc-*",
+        "modernize-*",
+        "performance-*",
+        "portability-*",
+        "readability-*"
+    ]
 }
