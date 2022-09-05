@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define IS_WHITESPACE(string, i)                                               \
-    (string[i] == ' ' || string[i] == '\t' || string[i] == '\n')
+    ((string)[i] == ' ' || (string)[i] == '\t' || (string)[i] == '\n')
 
 const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
 {
@@ -45,15 +45,12 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         }
     }
 
-    char **tokens;
     if (*p_token_count == 0)
     {
         return NULL;
     }
-    else
-    {
-        tokens = malloc((*p_token_count) * sizeof(char *));
-    }
+
+    char** tokens = malloc((*p_token_count) * sizeof(char *));
 
     uint32_t character_index = 0;
     for (uint32_t i = 0; i < *p_token_count; i++)
