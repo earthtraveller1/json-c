@@ -22,6 +22,7 @@ static uint32_t get_block_size_in_symbols(const char **p_symbols,
     {
         fprintf(stderr, "[ERROR]: Unknown block-opening character '%c'\n",
                 opening_char);
+        return 0;
     }
 
     uint32_t required_closing_chars_to_close = 1;
@@ -144,6 +145,7 @@ struct json_object json_parse_object(const char **p_tokens,
             fprintf(stderr, "[ERROR]: Expected ':' after field name of '%s'\n",
                     field_name);
             *p_status = 0;
+            free(field_name);
             return result;
         }
 
@@ -197,6 +199,7 @@ struct json_object json_parse_object(const char **p_tokens,
             fprintf(stderr, "[ERROR]: Expected value at field '%s'\n",
                     field_name);
             *p_status = 0;
+            free(field_name);
             return result;
         }
         
@@ -210,6 +213,14 @@ struct json_object json_parse_object(const char **p_tokens,
             fprintf(stderr, "[ERROR]: Expected ',' after field '%s'\n",
                     field_name);
             *p_status = 0;
+            
+            free(field_name);
+            
+            if (field_type == JSON_FIELD_TYPE_STRING)
+            {
+                free((void*)field_value.string_value);
+            }
+            
             return result;
         }
 
