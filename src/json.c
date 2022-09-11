@@ -154,15 +154,13 @@ struct json_object json_parse_object(const char **p_tokens,
         union json_field_value field_value;
         enum json_field_type field_type;
         if (p_tokens[symbol_index][0] == '\"' &&
-            p_tokens[symbol_index][strlen(p_tokens[symbol_index]) - 1] ==
-                '\"')
+            p_tokens[symbol_index][strlen(p_tokens[symbol_index]) - 1] == '\"')
         {
             field_type = JSON_FIELD_TYPE_STRING;
             const size_t field_size = strlen(p_tokens[symbol_index]) - 2;
             char *field_string_value = malloc((field_size + 1) * sizeof(char));
-            strncpy(field_string_value, p_tokens[symbol_index] + 1,
-                    field_size);
-                    
+            strncpy(field_string_value, p_tokens[symbol_index] + 1, field_size);
+
             // Ensure null termination
             field_string_value[field_size] = 0;
 
@@ -180,25 +178,42 @@ struct json_object json_parse_object(const char **p_tokens,
         }
         else if (p_tokens[symbol_index][0] == '{')
         {
-            const uint32_t block_size = get_block_size_in_symbols(p_tokens, symbol_index, p_token_count);
+            const uint32_t block_size = get_block_size_in_symbols(
+                p_tokens, symbol_index, p_token_count);
             uint8_t status = 0;
-            
+
             field_type = JSON_FIELD_TYPE_OBJECT;
-            field_value.object_value = json_parse_object(p_tokens + symbol_index, block_size, &status);
-            
+            field_value.object_value =
+                json_parse_object(p_tokens + symbol_index, block_size, &status);
+
             if (!status)
             {
-                fprintf(stderr, "[ERROR]: Too many errors processing child object '%s'.", field_name);
+                fprintf(
+                    stderr,
+                    "[ERROR]: Too many errors processing child object '%s'.",
+                    field_name);
             }
 
             symbol_index += block_size;
         }
         else if (p_tokens[symbol_index][0] == '[')
         {
-            field_type = JSON_FIELD_TYPE_ARRAY; // TODO: Parse arrays
+            const uint32_t block_size = get_block_size_in_symbols(
+                p_tokens, symbol_index, p_token_count);
+            uint8_t status = 0;
 
-            symbol_index += get_block_size_in_symbols(p_tokens, symbol_index,
-                                                      p_token_count);
+            field_type = JSON_FIELD_TYPE_ARRAY;
+            field_value.array_value =
+                json_parse_array(p_tokens + symbol_index, block_size, &status);
+
+            if (!status)
+            {
+                fprintf(stderr,
+                        "[ERROR]: Too many errors processing child array '%s'.",
+                        field_name);
+            }
+
+            symbol_index += block_size;
         }
         else
         {
@@ -208,7 +223,7 @@ struct json_object json_parse_object(const char **p_tokens,
             free(field_name);
             return result;
         }
-        
+
         // TODO: handle numbers.
 
         symbol_index += 1;
@@ -219,14 +234,14 @@ struct json_object json_parse_object(const char **p_tokens,
             fprintf(stderr, "[ERROR]: Expected ',' after field '%s'\n",
                     field_name);
             *p_status = 0;
-            
+
             free(field_name);
-            
+
             if (field_type == JSON_FIELD_TYPE_STRING)
             {
-                free((void*)field_value.string_value);
+                free((void *)field_value.string_value);
             }
-            
+
             return result;
         }
 
@@ -237,7 +252,17 @@ struct json_object json_parse_object(const char **p_tokens,
 
         result.fields[i] = field;
     }
-    
+
     *p_status = 1;
+    return result;
+}
+
+struct json_array json_parse_array(const char **p_tokens,
+                                   uint32_t p_token_count, uint8_t *p_status)
+{
+    struct json_array result;
+    result.elements = NULL;
+    result.number_of_elements = 0;
+
     return result;
 }
