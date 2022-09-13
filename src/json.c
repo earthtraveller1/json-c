@@ -209,7 +209,7 @@ struct json_object json_parse_object(const char **p_tokens,
             if (!status)
             {
                 fprintf(stderr,
-                        "[ERROR]: Too many errors processing child array '%s'.",
+                        "[ERROR]: Too many errors processing child array '%s'.\n",
                         field_name);
             }
 
