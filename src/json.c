@@ -31,6 +31,12 @@ static uint32_t get_block_size_in_symbols(const char **p_symbols,
 
     for (uint32_t i = (uint32_t)p_starting_symbol + 1; i < p_symbol_count; i++)
     {
+        if (i >= p_symbol_count)
+        {
+            fprintf(stderr, "[ERROR]: Reached end of file while parsing block\n");
+            return 0;
+        }
+        
         if (p_symbols[i][0] == opening_char)
         {
             required_closing_chars_to_close += 1;
