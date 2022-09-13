@@ -208,9 +208,10 @@ struct json_object json_parse_object(const char **p_tokens,
 
             if (!status)
             {
-                fprintf(stderr,
-                        "[ERROR]: Too many errors processing child array '%s'.\n",
-                        field_name);
+                fprintf(
+                    stderr,
+                    "[ERROR]: Too many errors processing child array '%s'.\n",
+                    field_name);
             }
 
             symbol_index += block_size;
@@ -257,13 +258,50 @@ struct json_object json_parse_object(const char **p_tokens,
     return result;
 }
 
+#define CHECK_FOR_COMMA                                                        \
+    if (p_tokens[token_index][0] == ',')                                       \
+    {                                                                          \
+        token_index += 1;                                                      \
+        result.number_of_elements += 1;                                        \
+        continue;                                                              \
+    }                                                                          \
+    else                                                                       \
+    {                                                                          \
+        fprintf(stderr, "[ERROR]: Expected ','\n");                            \
+        *p_status = 0;                                                         \
+        return result;                                                         \
+    }
+
 struct json_array json_parse_array(const char **p_tokens,
                                    uint32_t p_token_count, uint8_t *p_status)
 {
     struct json_array result;
     result.elements = NULL;
     result.number_of_elements = 0;
-    
+
+    // Obtain the number of elements within the tokens
+    uint32_t token_index = 0;
+    while (1)
+    {
+        if (token_index >= p_token_count)
+        {
+            break;
+        }
+        
+        if (p_tokens[token_index][0] == '{' || p_tokens[token_index][0] == '[')
+        {
+            token_index += get_block_size_in_symbols(p_tokens, token_index, p_token_count);
+            
+            CHECK_FOR_COMMA
+        }
+        else 
+        {
+            token_index += 1;
+            
+            CHECK_FOR_COMMA
+        }
+    }
+
     *p_status = 1;
 
     return result;
@@ -273,12 +311,12 @@ void json_free_object(struct json_object *p_object)
 {
     for (uint32_t i = 0; i < p_object->number_of_fields; i++)
     {
-        free((void*)(p_object->fields[i].name));
+        free((void *)(p_object->fields[i].name));
         p_object->fields[i].name = NULL;
-        
+
         if (p_object->fields[i].type == JSON_FIELD_TYPE_STRING)
         {
-            free((void*)(p_object->fields[i].value.string_value));
+            free((void *)(p_object->fields[i].value.string_value));
         }
         else if (p_object->fields[i].type == JSON_FIELD_TYPE_OBJECT)
         {
