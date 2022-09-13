@@ -33,10 +33,11 @@ static uint32_t get_block_size_in_symbols(const char **p_symbols,
     {
         if (i >= p_symbol_count)
         {
-            fprintf(stderr, "[ERROR]: Reached end of file while parsing block\n");
+            fprintf(stderr,
+                    "[ERROR]: Reached end of file while parsing block\n");
             return 0;
         }
-        
+
         if (p_symbols[i][0] == opening_char)
         {
             required_closing_chars_to_close += 1;
@@ -264,8 +265,9 @@ struct json_object json_parse_object(const char **p_tokens,
     return result;
 }
 
-#define CHECK_FOR_COMMA                                                        \
-    if (p_tokens[token_index][0] == ',')                                       \
+#define CHECK_FOR_ENDER                                                        \
+    if (p_tokens[token_index][0] == ',' || p_tokens[token_index][0] == '}' ||  \
+        p_tokens[token_index][0] == ']')                                       \
     {                                                                          \
         token_index += 1;                                                      \
         result.number_of_elements += 1;                                        \
@@ -293,18 +295,19 @@ struct json_array json_parse_array(const char **p_tokens,
         {
             break;
         }
-        
+
         if (p_tokens[token_index][0] == '{' || p_tokens[token_index][0] == '[')
         {
-            token_index += get_block_size_in_symbols(p_tokens, token_index, p_token_count);
-            
-            CHECK_FOR_COMMA
+            token_index +=
+                get_block_size_in_symbols(p_tokens, token_index, p_token_count);
+
+            CHECK_FOR_ENDER
         }
-        else 
+        else
         {
             token_index += 1;
-            
-            CHECK_FOR_COMMA
+
+            CHECK_FOR_ENDER
         }
     }
 
