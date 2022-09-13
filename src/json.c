@@ -263,6 +263,8 @@ struct json_array json_parse_array(const char **p_tokens,
     struct json_array result;
     result.elements = NULL;
     result.number_of_elements = 0;
+    
+    *p_status = 1;
 
     return result;
 }
