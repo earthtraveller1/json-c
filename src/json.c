@@ -286,9 +286,21 @@ struct json_array json_parse_array(const char **p_tokens,
     struct json_array result;
     result.elements = NULL;
     result.number_of_elements = 0;
+    
+    uint32_t token_index = 0;
+    
+    if (p_tokens[token_index][0] == '[')
+    {
+        token_index += 1;
+    }
+    else 
+    {
+        fprintf(stderr, "[ERROR]: Array does not begin with '['\n");
+        *p_status = 0;
+        return result;
+    }
 
     // Obtain the number of elements within the tokens
-    uint32_t token_index = 0;
     while (1)
     {
         if (token_index >= p_token_count)
