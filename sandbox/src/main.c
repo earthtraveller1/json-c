@@ -59,6 +59,8 @@ int main()
             printf("<VALUE HERE>\n"); // Sorry, too lazy
         }
     }
+    
+    json_free_object(&json_object);
 
     return 0;
 }
