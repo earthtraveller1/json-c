@@ -269,20 +269,20 @@ struct json_array json_parse_array(const char **p_tokens,
     return result;
 }
 
-void json_free_object(struct json_object *object)
+void json_free_object(struct json_object *p_object)
 {
-    for (uint32_t i = 0; i < object->number_of_fields; i++)
+    for (uint32_t i = 0; i < p_object->number_of_fields; i++)
     {
-        free((void*)(object->fields[i].name));
-        object->fields[i].name = NULL;
+        free((void*)(p_object->fields[i].name));
+        p_object->fields[i].name = NULL;
         
-        if (object->fields[i].type == JSON_FIELD_TYPE_STRING)
+        if (p_object->fields[i].type == JSON_FIELD_TYPE_STRING)
         {
-            free((void*)(object->fields[i].value.string_value));
+            free((void*)(p_object->fields[i].value.string_value));
         }
-        else if (object->fields[i].type == JSON_FIELD_TYPE_OBJECT)
+        else if (p_object->fields[i].type == JSON_FIELD_TYPE_OBJECT)
         {
-            json_free_object(&(object->fields[i].value.object_value));
+            json_free_object(&(p_object->fields[i].value.object_value));
         }
     }
 }
