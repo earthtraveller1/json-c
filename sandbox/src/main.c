@@ -47,12 +47,6 @@ int main()
     uint32_t token_count;
     const char **tokens = tokenize_string(file_contents, &token_count);
 
-    printf("[INFO]: Tokens:\n");
-    for (uint32_t i = 0; i < token_count; i++)
-    {
-        printf("\t%s\n", tokens[i]);
-    }
-
     free((void *)file_contents);
 
     uint8_t status;
