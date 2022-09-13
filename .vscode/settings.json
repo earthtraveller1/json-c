@@ -15,11 +15,9 @@
     "clang-tidy.checks": [
         "bugprone-*",
         "clang-analyzer-*",
-        "misc-*",
         "modernize-*",
         "performance-*",
-        "portability-*",
-        "readability-*"
+        "portability-*"
     ],
     "clang-tidy.compilerArgs": [
         "-D_CRT_SECURE_NO_WARNINGS",
