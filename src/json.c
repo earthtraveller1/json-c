@@ -301,13 +301,8 @@ struct json_array json_parse_array(const char **p_tokens,
     }
 
     // Obtain the number of elements within the tokens
-    while (1)
+    while (token_index < p_token_count)
     {
-        if (token_index >= p_token_count)
-        {
-            break;
-        }
-
         if (p_tokens[token_index][0] == '{' || p_tokens[token_index][0] == '[')
         {
             token_index +=
