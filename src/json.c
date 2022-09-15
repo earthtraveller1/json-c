@@ -326,9 +326,32 @@ struct json_array json_parse_array(const char **p_tokens,
     for (uint32_t i = 0; i < result.number_of_elements; i++)
     {
         if (p_tokens[token_index][0] == '"' &&
-            p_tokens[token_index][strlen(p_tokens[token_index]) - 2] == '"')
+            p_tokens[token_index][strlen(p_tokens[token_index]) - 1] == '"')
         {
             result.elements[i].type = JSON_FIELD_TYPE_STRING;
+            
+            size_t string_length = strlen(p_tokens[token_index]) - 2;
+            
+            result.elements[i].value.string_value = malloc(string_length + 1);
+            
+            strncpy((char*)result.elements[i].value.string_value, p_tokens[token_index] + 1, string_length);
+            
+            // Ensure null termination
+            ((char*)(result.elements[i].value.string_value))[string_length] = 0;
+            
+            token_index += 1;
+            if (p_tokens[token_index][0] != ',' &&
+                p_tokens[token_index][0] != ']')
+            {
+                fprintf(stderr, "[ERROR]: Expected ','\n");
+                *p_status = 0;
+                return result;
+            }
+            else
+            {
+                token_index += 1;
+                continue;
+            }
         }
         else if (strcmp(p_tokens[token_index], "true") == 0)
         {
