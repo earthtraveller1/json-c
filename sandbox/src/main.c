@@ -35,7 +35,7 @@ static void print_object(const struct json_object *p_object, uint8_t p_indents)
         }
         else IF_FIELD_TYPE_IS(JSON_FIELD_TYPE_ARRAY)
         {
-            printf("Array [%llu]\n",
+            printf("Array [%zu]\n",
                    p_object->fields[i].value.array_value.number_of_elements);
             print_array(&(p_object->fields[i].value.array_value), p_indents + 1);
         }
