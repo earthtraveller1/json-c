@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,6 +102,121 @@ static uint32_t get_object_field_count(const char **p_symbols,
     return result;
 }
 
+static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
+                                  uint32_t *p_symbol_index,
+                                  union json_field_value *p_value,
+                                  enum json_field_type *p_type)
+{
+    if (p_tokens[*p_symbol_index][0] == '\"' &&
+        p_tokens[*p_symbol_index][strlen(p_tokens[*p_symbol_index]) - 1] ==
+            '\"')
+    {
+        *p_type = JSON_FIELD_TYPE_STRING;
+        const size_t field_size = strlen(p_tokens[*p_symbol_index]) - 2;
+        char *field_string_value = malloc((field_size + 1) * sizeof(char));
+        strncpy(field_string_value, p_tokens[*p_symbol_index] + 1, field_size);
+
+        // Ensure null termination
+        field_string_value[field_size] = 0;
+
+        p_value->string_value = field_string_value;
+    }
+    else if (strcmp(p_tokens[*p_symbol_index], "true") == 0)
+    {
+        *p_type = JSON_FIELD_TYPE_BOOLEAN;
+        p_value->boolean_value = 1;
+    }
+    else if (strcmp(p_tokens[*p_symbol_index], "false") == 0)
+    {
+        *p_type = JSON_FIELD_TYPE_BOOLEAN;
+        p_value->boolean_value = 0;
+    }
+    else if (p_tokens[*p_symbol_index][0] == '{')
+    {
+        const uint32_t block_size =
+            get_block_size_in_symbols(p_tokens, *p_symbol_index, p_token_count);
+        uint8_t status = 0;
+
+        *p_type = JSON_FIELD_TYPE_OBJECT;
+        p_value->object_value =
+            json_parse_object(p_tokens + *p_symbol_index, block_size, &status);
+
+        if (!status)
+        {
+            return status;
+        }
+
+        *p_symbol_index += block_size;
+    }
+    else if (p_tokens[*p_symbol_index][0] == '[')
+    {
+        const uint32_t block_size =
+            get_block_size_in_symbols(p_tokens, *p_symbol_index, p_token_count);
+        uint8_t status = 0;
+
+        *p_type = JSON_FIELD_TYPE_ARRAY;
+        p_value->array_value =
+            json_parse_array(p_tokens + *p_symbol_index, block_size, &status);
+
+        if (!status)
+        {
+            return status;
+        }
+
+        *p_symbol_index += block_size;
+    }
+    else if (isdigit(p_tokens[*p_symbol_index][0]))
+    {
+        *p_symbol_index += 1;
+        if (p_tokens[*p_symbol_index][0] == ',')
+        {
+            *p_symbol_index -= 1;
+
+            *p_type = JSON_FIELD_TYPE_INTEGER;
+            p_value->int_value = atoi(p_tokens[*p_symbol_index]);
+        }
+        else if (p_tokens[*p_symbol_index][0] == '.')
+        {
+            *p_symbol_index -= 1;
+
+            size_t float_string_length = strlen(p_tokens[*p_symbol_index]) +
+                                         strlen(p_tokens[*p_symbol_index + 1]) +
+                                         strlen(p_tokens[*p_symbol_index + 2]);
+            char* float_string = malloc((float_string_length + 1) * sizeof(char));
+            float_string[0] = 0;
+            
+            strcat(float_string, p_tokens[*p_symbol_index]);
+            strcat(float_string, p_tokens[*p_symbol_index + 1]);
+            strcat(float_string, p_tokens[*p_symbol_index + 2]);
+            
+            // Ensure null-termination
+            float_string[float_string_length] = 0;
+            
+            *p_type = JSON_FIELD_TYPE_FLOAT;
+            p_value->float_value = strtod(float_string, NULL);
+            
+            free(float_string);
+            
+            *p_symbol_index += 2;
+        }
+        else 
+        {
+            fprintf(stderr, "[ERROR]: Unexpected token '%s'", p_tokens[*p_symbol_index]);
+            return 0;
+        }
+    }
+    else
+    {
+        p_value->boolean_value = 0;
+        *p_type = JSON_FIELD_TYPE_BOOLEAN;
+
+        fprintf(stderr, "[ERROR]: Expected value\n");
+        return 0;
+    }
+
+    return 1;
+}
+
 struct json_object json_parse_object(const char **p_tokens,
                                      uint32_t p_token_count, uint8_t *p_status)
 {
@@ -160,79 +276,28 @@ struct json_object json_parse_object(const char **p_tokens,
 
         union json_field_value field_value;
         enum json_field_type field_type;
-        if (p_tokens[symbol_index][0] == '\"' &&
-            p_tokens[symbol_index][strlen(p_tokens[symbol_index]) - 1] == '\"')
+
+        if (!process_json_value(p_tokens, p_token_count, &symbol_index,
+                                &field_value, &field_type))
         {
-            field_type = JSON_FIELD_TYPE_STRING;
-            const size_t field_size = strlen(p_tokens[symbol_index]) - 2;
-            char *field_string_value = malloc((field_size + 1) * sizeof(char));
-            strncpy(field_string_value, p_tokens[symbol_index] + 1, field_size);
-
-            // Ensure null termination
-            field_string_value[field_size] = 0;
-
-            field_value.string_value = field_string_value;
-        }
-        else if (strcmp(p_tokens[symbol_index], "true") == 0)
-        {
-            field_type = JSON_FIELD_TYPE_BOOLEAN;
-            field_value.boolean_value = 1;
-        }
-        else if (strcmp(p_tokens[symbol_index], "false") == 0)
-        {
-            field_type = JSON_FIELD_TYPE_BOOLEAN;
-            field_value.boolean_value = 0;
-        }
-        else if (p_tokens[symbol_index][0] == '{')
-        {
-            const uint32_t block_size = get_block_size_in_symbols(
-                p_tokens, symbol_index, p_token_count);
-            uint8_t status = 0;
-
-            field_type = JSON_FIELD_TYPE_OBJECT;
-            field_value.object_value =
-                json_parse_object(p_tokens + symbol_index, block_size, &status);
-
-            if (!status)
-            {
-                fprintf(
-                    stderr,
-                    "[ERROR]: Too many errors processing child object '%s'.",
-                    field_name);
-            }
-
-            symbol_index += block_size;
-        }
-        else if (p_tokens[symbol_index][0] == '[')
-        {
-            const uint32_t block_size = get_block_size_in_symbols(
-                p_tokens, symbol_index, p_token_count);
-            uint8_t status = 0;
-
-            field_type = JSON_FIELD_TYPE_ARRAY;
-            field_value.array_value =
-                json_parse_array(p_tokens + symbol_index, block_size, &status);
-
-            if (!status)
-            {
-                fprintf(
-                    stderr,
-                    "[ERROR]: Too many errors processing child array '%s'.\n",
-                    field_name);
-            }
-
-            symbol_index += block_size;
-        }
-        else
-        {
-            fprintf(stderr, "[ERROR]: Expected value at field '%s'\n",
+            fprintf(stderr,
+                    "[ERROR]: Too many errors while processing value '%s'",
                     field_name);
             *p_status = 0;
+
             free(field_name);
+
+            if (field_type == JSON_FIELD_TYPE_STRING)
+            {
+                free(field_value.string_value);
+            }
+            else if (field_type == JSON_FIELD_TYPE_OBJECT)
+            {
+                json_free_object(&(field_value.object_value));
+            }
+
             return result;
         }
-
-        // TODO: handle numbers.
 
         symbol_index += 1;
 
@@ -329,16 +394,18 @@ struct json_array json_parse_array(const char **p_tokens,
             p_tokens[token_index][strlen(p_tokens[token_index]) - 1] == '"')
         {
             result.elements[i].type = JSON_FIELD_TYPE_STRING;
-            
+
             size_t string_length = strlen(p_tokens[token_index]) - 2;
-            
+
             result.elements[i].value.string_value = malloc(string_length + 1);
-            
-            strncpy((char*)result.elements[i].value.string_value, p_tokens[token_index] + 1, string_length);
-            
+
+            strncpy((char *)result.elements[i].value.string_value,
+                    p_tokens[token_index] + 1, string_length);
+
             // Ensure null termination
-            ((char*)(result.elements[i].value.string_value))[string_length] = 0;
-            
+            ((char *)(result.elements[i].value.string_value))[string_length] =
+                0;
+
             token_index += 1;
             if (p_tokens[token_index][0] != ',' &&
                 p_tokens[token_index][0] != ']')
@@ -407,7 +474,7 @@ struct json_array json_parse_array(const char **p_tokens,
                 *p_status = 0;
                 return result;
             }
-            
+
             token_index += block_size;
             continue;
         }
@@ -424,12 +491,11 @@ struct json_array json_parse_array(const char **p_tokens,
             if (!status)
             {
                 fprintf(stderr,
-                        "[ERROR]: Too many errors parsing child array '%u'",
-                        i);
+                        "[ERROR]: Too many errors parsing child array '%u'", i);
                 *p_status = 0;
                 return result;
             }
-            
+
             token_index += block_size;
             continue;
         }
