@@ -37,14 +37,14 @@ union json_field_value
     uint8_t boolean_value;
     int32_t int_value;
     double float_value;
-    const char *string_value;
+    char *string_value;
     struct json_object object_value;
     struct json_array array_value;
 };
 
 struct json_field
 {
-    const char *name;
+    char *name;
     enum json_field_type type;
     union json_field_value value;
 };
