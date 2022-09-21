@@ -39,6 +39,14 @@ static void print_object(const struct json_object *p_object, uint8_t p_indents)
                    p_object->fields[i].value.array_value.number_of_elements);
             print_array(&(p_object->fields[i].value.array_value), p_indents + 1);
         }
+        else IF_FIELD_TYPE_IS(JSON_FIELD_TYPE_INTEGER)
+        {
+            printf("<Integer with value of %d>\n", p_object->fields[i].value.int_value);
+        }
+        else IF_FIELD_TYPE_IS(JSON_FIELD_TYPE_FLOAT)
+        {
+            printf("<Float with value of %f>\n", p_object->fields[i].value.float_value);
+        }
         else
         {
             printf("<UNSUPPORTED TYPE>\n");
@@ -73,6 +81,14 @@ static void print_array(const struct json_array *p_array, uint8_t p_indents)
                    p_array->elements[i].value.array_value.number_of_elements);
             print_array(&(p_array->elements[i].value.array_value),
                         p_indents + 1);
+        }
+        else IF_ELEMENT_TYPE_IS(JSON_FIELD_TYPE_INTEGER)
+        {
+            printf("<Integer: %d>\n", p_array->elements[i].value.int_value);
+        }
+        else IF_ELEMENT_TYPE_IS(JSON_FIELD_TYPE_FLOAT)
+        {
+            printf("<Float: %f>\n", p_array->elements[i].value.float_value);
         }
         else
         {
