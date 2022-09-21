@@ -480,3 +480,6 @@ _deps
 # Ninja clutters
 .ninja_deps
 .ninja_log
+
+# The build directory
+build
