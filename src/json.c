@@ -168,7 +168,7 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
     else if (isdigit(p_tokens[*p_symbol_index][0]))
     {
         *p_symbol_index += 1;
-        if (p_tokens[*p_symbol_index][0] == ',')
+        if (p_tokens[*p_symbol_index][0] == ',' || p_tokens[*p_symbol_index][0] == ']' || p_tokens[*p_symbol_index][0] == '}')
         {
             *p_symbol_index -= 1;
 
@@ -182,26 +182,28 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
             size_t float_string_length = strlen(p_tokens[*p_symbol_index]) +
                                          strlen(p_tokens[*p_symbol_index + 1]) +
                                          strlen(p_tokens[*p_symbol_index + 2]);
-            char* float_string = malloc((float_string_length + 1) * sizeof(char));
+            char *float_string =
+                malloc((float_string_length + 1) * sizeof(char));
             float_string[0] = 0;
-            
+
             strcat(float_string, p_tokens[*p_symbol_index]);
             strcat(float_string, p_tokens[*p_symbol_index + 1]);
             strcat(float_string, p_tokens[*p_symbol_index + 2]);
-            
+
             // Ensure null-termination
             float_string[float_string_length] = 0;
-            
+
             *p_type = JSON_FIELD_TYPE_FLOAT;
             p_value->float_value = strtod(float_string, NULL);
-            
+
             free(float_string);
-            
+
             *p_symbol_index += 2;
         }
-        else 
+        else
         {
-            fprintf(stderr, "[ERROR]: Unexpected token '%s'", p_tokens[*p_symbol_index]);
+            fprintf(stderr, "[ERROR]: Unexpected token '%s'\n",
+                    p_tokens[*p_symbol_index]);
             return 0;
         }
     }
@@ -378,17 +380,15 @@ struct json_array json_parse_array(const char **p_tokens,
         if (isdigit(p_tokens[token_index][0]))
         {
             token_index += 1;
-            
+
             if (p_tokens[token_index][0] == '.')
             {
                 token_index += 2;
-                
+
                 CHECK_FOR_ENDER
             }
-            else 
+            else
             {
-                token_index += 1;
-                
                 CHECK_FOR_ENDER
             }
         }
@@ -407,12 +407,17 @@ struct json_array json_parse_array(const char **p_tokens,
     // Now, obtain all of the elements.
     for (uint32_t i = 0; i < result.number_of_elements; i++)
     {
-        if (!process_json_value(p_tokens, p_token_count, &token_index, &(result.elements[i].value), &(result.elements[i].type)))
+        if (!process_json_value(p_tokens, p_token_count, &token_index,
+                                &(result.elements[i].value),
+                                &(result.elements[i].type)))
         {
-            fprintf(stderr, "[ERROR]: Failed to process element %d of array.", i);
+            fprintf(stderr, "[ERROR]: Failed to process element %d of array.\n",
+                    i);
             *p_status = 0;
             return result;
         }
+        
+        token_index += 2;
     }
 
     *p_status = 1;
