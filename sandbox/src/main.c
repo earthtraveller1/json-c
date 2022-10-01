@@ -118,7 +118,7 @@ int main()
     if (!status)
     {
         fprintf(stderr, "[ERROR]: Failed to parse JSON 'sandbox/tony.json'\n");
-        return -1;
+        return EXIT_FAILURE;
     }
 
     printf("[INFO]: Number of fields: %zd\n", json_object.number_of_fields);
@@ -128,5 +128,5 @@ int main()
 
     json_free_object(&json_object);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
