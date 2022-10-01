@@ -102,6 +102,10 @@ static void print_array(const struct json_array *p_array, uint8_t p_indents)
 int main()
 {
     const char *file_contents = read_file_as_string("sandbox/tony.json");
+    if (file_contents == NULL)
+    {
+        return EXIT_FAILURE;
+    }
 
     uint32_t token_count;
     const char **tokens = tokenize_string(file_contents, &token_count);
