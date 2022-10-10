@@ -19,6 +19,8 @@ else()
     add_compile_options("-Wall" "-Werror" "-Wpedantic")
 endif()
 
+include_directories("${CMAKE_SOURCE_DIR}/include")
+
 add_library("json-c")
 
 add_subdirectory("src")
