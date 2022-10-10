@@ -467,7 +467,6 @@ _deps
 *.sln
 
 .vscode/*
-!.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
