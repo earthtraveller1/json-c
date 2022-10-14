@@ -49,4 +49,8 @@ struct json_array_element
     union json_field_value value;
 };
 
+void json_free_object(struct json_object *object);
+
+void json_free_array(struct json_array *array);
+
 #endif /* EA82C1F4_C7D1_4128_B602_FDA1103EF91D */

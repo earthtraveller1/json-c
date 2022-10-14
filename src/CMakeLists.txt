@@ -4,6 +4,7 @@ target_sources(
     "file-utils.c"
     "json.c"
     "parser.c"
+    "public.c"
     
     "json.h"
     "file-utils.h"

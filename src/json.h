@@ -18,8 +18,4 @@ struct json_object json_parse_object_from_tokens(const char **tokens, uint32_t t
 struct json_array json_parse_array_from_tokens(const char **tokens, uint32_t token_count,
                                    uint8_t *status);
 
-void json_free_object(struct json_object *object);
-
-void json_free_array(struct json_array *array);
-
 #endif /* D000424B_64A5_449A_BB64_37EE58E7F6F5 */
