@@ -12,10 +12,10 @@ possible. Most of them should be self explanatory.
 
 #include <json/json.h>
 
-struct json_object json_parse_object(const char **tokens, uint32_t token_count,
+struct json_object json_parse_object_from_tokens(const char **tokens, uint32_t token_count,
                                      uint8_t *status);
 
-struct json_array json_parse_array(const char **tokens, uint32_t token_count,
+struct json_array json_parse_array_from_tokens(const char **tokens, uint32_t token_count,
                                    uint8_t *status);
 
 void json_free_object(struct json_object *object);

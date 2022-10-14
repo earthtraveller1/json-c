@@ -139,7 +139,7 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
 
         *p_type = JSON_FIELD_TYPE_OBJECT;
         p_value->object_value =
-            json_parse_object(p_tokens + *p_symbol_index, block_size, &status);
+            json_parse_object_from_tokens(p_tokens + *p_symbol_index, block_size, &status);
 
         if (!status)
         {
@@ -156,7 +156,7 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
 
         *p_type = JSON_FIELD_TYPE_ARRAY;
         p_value->array_value =
-            json_parse_array(p_tokens + *p_symbol_index, block_size, &status);
+            json_parse_array_from_tokens(p_tokens + *p_symbol_index, block_size, &status);
 
         if (!status)
         {
@@ -219,7 +219,7 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
     return 1;
 }
 
-struct json_object json_parse_object(const char **p_tokens,
+struct json_object json_parse_object_from_tokens(const char **p_tokens,
                                      uint32_t p_token_count, uint8_t *p_status)
 {
     struct json_object result;
@@ -347,7 +347,7 @@ struct json_object json_parse_object(const char **p_tokens,
         return result;                                                         \
     }
 
-struct json_array json_parse_array(const char **p_tokens,
+struct json_array json_parse_array_from_tokens(const char **p_tokens,
                                    uint32_t p_token_count, uint8_t *p_status)
 {
     struct json_array result;
