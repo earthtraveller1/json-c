@@ -7,7 +7,7 @@
 #define IS_WHITESPACE(string, i)                                               \
     ((string)[i] == ' ' || (string)[i] == '\t' || (string)[i] == '\n')
 
-const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
+char **tokenize_string(const char *p_string, uint32_t *p_token_count)
 {
     *p_token_count = 0;
 
@@ -106,14 +106,14 @@ const char **tokenize_string(const char *p_string, uint32_t *p_token_count)
         character_index += token_size;
     }
 
-    return (const char **)tokens;
+    return tokens;
 }
 
-void free_string_array(const char **p_strings, uint32_t p_string_count)
+void free_string_array(char **p_strings, uint32_t p_string_count)
 {
     for (uint32_t i = 0; i < p_string_count; i++)
     {
-        free((void *)p_strings[i]);
+        free(p_strings[i]);
     }
 
     free(p_strings);
