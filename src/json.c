@@ -440,6 +440,10 @@ void json_free_object(struct json_object *p_object)
         {
             json_free_object(&(p_object->fields[i].value.object_value));
         }
+        else if (p_object->fields[i].type == JSON_FIELD_TYPE_ARRAY)
+        {
+            json_free_array(&(p_object->fields[i].value.array_value));
+        }
     }
 }
 
