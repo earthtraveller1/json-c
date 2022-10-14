@@ -445,6 +445,8 @@ void json_free_object(struct json_object *p_object)
             json_free_array(&(p_object->fields[i].value.array_value));
         }
     }
+    
+    free(p_object->fields);
 }
 
 void json_free_array(struct json_array *p_array)
