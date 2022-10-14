@@ -16,7 +16,7 @@ uint32_t get_file_size(FILE *p_file)
     return result;
 }
 
-const char *read_file_as_string(const char *p_filename)
+char *read_file_as_string(const char *p_filename)
 {
     FILE *file = fopen(p_filename, "r");
     if (file == NULL)
