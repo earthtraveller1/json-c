@@ -1,11 +1,7 @@
 #ifndef D000424B_64A5_449A_BB64_37EE58E7F6F5
 #define D000424B_64A5_449A_BB64_37EE58E7F6F5
 
-/*
-A list of functions and structures used for decoding JSON files. Note that none
-of them have actually been implemented yet so I would avoid using them whenever
-possible. Most of them should be self explanatory.
-*/
+// Internal JSON parsing utilities.
 
 #include <stddef.h>
 #include <stdint.h>

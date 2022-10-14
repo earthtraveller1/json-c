@@ -1,8 +1,6 @@
 #ifndef EA82C1F4_C7D1_4128_B602_FDA1103EF91D
 #define EA82C1F4_C7D1_4128_B602_FDA1103EF91D
 
-// Internal JSON parsing utilities.
-
 #include <stdint.h>
 #include <stddef.h>
 
