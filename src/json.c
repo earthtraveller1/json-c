@@ -442,3 +442,24 @@ void json_free_object(struct json_object *p_object)
         }
     }
 }
+
+void json_free_array(struct json_array *p_array)
+{
+    for (uint32_t i = 0; i < p_array->number_of_elements; i++)
+    {
+        if (p_array->elements[i].type == JSON_FIELD_TYPE_STRING)
+        {
+            free(p_array->elements[i].value.string_value);
+        }
+        else if (p_array->elements[i].type == JSON_FIELD_TYPE_OBJECT)
+        {
+            json_free_object(&(p_array->elements[i].value.object_value));
+        }
+        else if (p_array->elements[i].type == JSON_FIELD_TYPE_ARRAY)
+        {
+            json_free_array(&(p_array->elements[i].value.array_value));
+        }
+    }
+    
+    free(p_array->elements);
+}
