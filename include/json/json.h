@@ -53,4 +53,6 @@ void json_free_object(struct json_object *object);
 
 void json_free_array(struct json_array *array);
 
+struct json_object json_parse_file(const char* filepath, uint8_t* status);
+
 #endif /* EA82C1F4_C7D1_4128_B602_FDA1103EF91D */

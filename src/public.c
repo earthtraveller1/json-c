@@ -1,10 +1,33 @@
-// This file contains the implementations for all of the public functions in 
+// This file contains the implementations for all of the public functions in
 // this library. Of course, as the library grows it might be split into many o-
 // ther files.
 
 #include <stdlib.h>
 
 #include <json/json.h>
+
+#include "file-utils.h"
+#include "json.h"
+#include "parser.h"
+
+struct json_object json_parse_file(const char *p_filepath, uint8_t *p_status)
+{
+    struct json_object result = {0, NULL};
+
+    char *file_contents = read_file_as_string(p_filepath);
+    if (file_contents == NULL)
+    {
+        *p_status = 0;
+        return result;
+    }
+
+    uint32_t token_count;
+    char **tokens = tokenize_string(file_contents, &token_count);
+
+    result = json_parse_object_from_tokens((const char **)tokens, token_count,
+                                           p_status);
+    return result;
+}
 
 void json_free_object(struct json_object *p_object)
 {
@@ -26,7 +49,7 @@ void json_free_object(struct json_object *p_object)
             json_free_array(&(p_object->fields[i].value.array_value));
         }
     }
-    
+
     free(p_object->fields);
 }
 
@@ -47,6 +70,6 @@ void json_free_array(struct json_array *p_array)
             json_free_array(&(p_array->elements[i].value.array_value));
         }
     }
-    
+
     free(p_array->elements);
 }
