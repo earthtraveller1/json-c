@@ -5,6 +5,8 @@
         "intelligence": "5",
         "starting": "false",
         "nothingElse": "true",
+        "isMale": true,
+        "isNengLi": false,
         "stuff": [
             "computer",
             "desk",
@@ -15,6 +17,7 @@
     },
     "number": 45,
     "fractionalComponent": 69.45,
+    "boolean": true,
     "array": [
         "one",
         "two",
