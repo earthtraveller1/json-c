@@ -16,13 +16,13 @@ enum json_field_type
 
 struct json_object
 {
-    size_t number_of_fields;
+    size_t field_count;
     struct json_field *fields;
 };
 
 struct json_array
 {
-    size_t number_of_elements;
+    size_t element_count;
     struct json_array_element *elements;
 };
 

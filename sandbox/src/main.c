@@ -46,7 +46,7 @@ static void print_json_value(union json_field_value p_value,
 static void print_object(const struct json_object *p_object, uint8_t p_indents)
 {
     for (const struct json_field *field = p_object->fields;
-         field < p_object->fields + p_object->number_of_fields; field++)
+         field < p_object->fields + p_object->field_count; field++)
     {
         for (uint8_t i = 0; i < p_indents; i++)
         {
@@ -61,7 +61,7 @@ static void print_object(const struct json_object *p_object, uint8_t p_indents)
 static void print_array(const struct json_array *p_array, uint8_t p_indents)
 {
     for (const struct json_array_element *element = p_array->elements;
-         element < p_array->elements + p_array->number_of_elements; element++)
+         element < p_array->elements + p_array->element_count; element++)
     {
         for (uint8_t i = 0; i < p_indents; i++)
         {

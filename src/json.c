@@ -138,8 +138,8 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
         uint8_t status = 0;
 
         *p_type = JSON_FIELD_TYPE_OBJECT;
-        p_value->object_value =
-            json_parse_object_from_tokens(p_tokens + *p_symbol_index, block_size, &status);
+        p_value->object_value = json_parse_object_from_tokens(
+            p_tokens + *p_symbol_index, block_size, &status);
 
         if (!status)
         {
@@ -155,8 +155,8 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
         uint8_t status = 0;
 
         *p_type = JSON_FIELD_TYPE_ARRAY;
-        p_value->array_value =
-            json_parse_array_from_tokens(p_tokens + *p_symbol_index, block_size, &status);
+        p_value->array_value = json_parse_array_from_tokens(
+            p_tokens + *p_symbol_index, block_size, &status);
 
         if (!status)
         {
@@ -168,7 +168,9 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
     else if (isdigit(p_tokens[*p_symbol_index][0]))
     {
         *p_symbol_index += 1;
-        if (p_tokens[*p_symbol_index][0] == ',' || p_tokens[*p_symbol_index][0] == ']' || p_tokens[*p_symbol_index][0] == '}')
+        if (p_tokens[*p_symbol_index][0] == ',' ||
+            p_tokens[*p_symbol_index][0] == ']' ||
+            p_tokens[*p_symbol_index][0] == '}')
         {
             *p_symbol_index -= 1;
 
@@ -220,13 +222,14 @@ static uint8_t process_json_value(const char **p_tokens, uint32_t p_token_count,
 }
 
 struct json_object json_parse_object_from_tokens(const char **p_tokens,
-                                     uint32_t p_token_count, uint8_t *p_status)
+                                                 uint32_t p_token_count,
+                                                 uint8_t *p_status)
 {
     struct json_object result;
-    result.number_of_fields = get_object_field_count(
+    result.field_count = get_object_field_count(
         p_tokens + 1,
         p_token_count - 1); // Exclude the beginning and ending braces
-    result.fields = malloc(sizeof(struct json_field) * result.number_of_fields);
+    result.fields = malloc(sizeof(struct json_field) * result.field_count);
 
     uint32_t symbol_index = 0;
     uint32_t required_closing_chars = 0;
@@ -239,7 +242,7 @@ struct json_object json_parse_object_from_tokens(const char **p_tokens,
         return result;
     }
 
-    for (uint32_t i = 0; i < result.number_of_fields; i++)
+    for (uint32_t i = 0; i < result.field_count; i++)
     {
         // Closing braces indicates the end of the object.
         if ((required_closing_chars == 0 || closing_char != '}') &&
@@ -337,7 +340,7 @@ struct json_object json_parse_object_from_tokens(const char **p_tokens,
         p_tokens[token_index][0] == ']')                                       \
     {                                                                          \
         token_index += 1;                                                      \
-        result.number_of_elements += 1;                                        \
+        result.element_count += 1;                                             \
         continue;                                                              \
     }                                                                          \
     else                                                                       \
@@ -348,11 +351,12 @@ struct json_object json_parse_object_from_tokens(const char **p_tokens,
     }
 
 struct json_array json_parse_array_from_tokens(const char **p_tokens,
-                                   uint32_t p_token_count, uint8_t *p_status)
+                                               uint32_t p_token_count,
+                                               uint8_t *p_status)
 {
     struct json_array result;
     result.elements = NULL;
-    result.number_of_elements = 0;
+    result.element_count = 0;
 
     uint32_t token_index = 0;
 
@@ -401,11 +405,11 @@ struct json_array json_parse_array_from_tokens(const char **p_tokens,
     }
 
     result.elements =
-        malloc(sizeof(struct json_array_element) * result.number_of_elements);
+        malloc(sizeof(struct json_array_element) * result.element_count);
     token_index = 1;
 
     // Now, obtain all of the elements.
-    for (uint32_t i = 0; i < result.number_of_elements; i++)
+    for (uint32_t i = 0; i < result.element_count; i++)
     {
         if (!process_json_value(p_tokens, p_token_count, &token_index,
                                 &(result.elements[i].value),
@@ -416,7 +420,7 @@ struct json_array json_parse_array_from_tokens(const char **p_tokens,
             *p_status = 0;
             return result;
         }
-        
+
         token_index += 2;
     }
 
